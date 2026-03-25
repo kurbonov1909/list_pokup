@@ -1,0 +1,494 @@
+{% extends 'list/base.html' %}
+
+{% block content %}
+<div class="report-container">
+    <div class="report-header">
+        <h1 class="report-title">📊 Hisobot {% if selected_store %} - {{ selected_store.name }}{% endif %}</h1>
+        <p class="report-subtitle">{{ month }} oyi uchun xaridlar hisoboti</p>
+    </div>
+
+    <form method="get" class="filter-section">
+        <div class="filter-grid">
+            <div class="filter-group">
+                <label for="month" class="filter-label">📅 Oy tanlang</label>
+                <input type="month" id="month" name="month" value="{{ month }}" class="filter-input">
+            </div>
+            <div class="filter-group">
+                <label for="store" class="filter-label">🏪 Magazin tanlang (ixtiyoriy)</label>
+                <select id="store" name="store" class="filter-input">
+                    <option value="">Barcha magazinlar</option>
+                    {% for store in stores %}
+                    <option value="{{ store.id }}" {% if selected_store and selected_store.id == store.id %}selected{% endif %}>{{ store.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-group">
+                <button type="submit" class="filter-btn">🔍 Ko'rish</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="purchases-grid">
+        {% for purchase in purchases reversed %}
+        <div class="purchase-card">
+            <div class="purchase-header">
+                <div class="purchase-date">
+                    <span class="date-icon">📅</span>
+                    <span>{{ purchase.date|date:"d.m.Y" }}</span>
+                </div>
+                <div class="purchase-store">
+                    <span class="store-icon">🏪</span>
+                    <span>{{ purchase.store.name }}</span>
+                </div>
+            </div>
+            
+            <div class="purchase-details">
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">📏 Uzunlik</span>
+                        <span class="detail-value">{{ purchase.length }} m</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">📐 En</span>
+                        <span class="detail-value">{{ purchase.width }} m</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">📊 Qalinlik</span>
+                        <span class="detail-value">{{ purchase.thickness }} m</span>
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">⚖️ Zichlik</span>
+                        <span class="detail-value">{{ purchase.density }} kg/m³</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">💰 Kg narx</span>
+                        <span class="detail-value">{{ purchase.price_per_kg }} so'm</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">🔢 Soni</span>
+                        <span class="detail-value">{{ purchase.quantity }} ta</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="purchase-total">
+                <div class="total-label">💵 Jami narx</div>
+                <div class="total-amount">{{ purchase.total_cost }} so'm</div>
+            </div>
+            
+            <div class="purchase-user">
+                <div class="user-label">👤 Xarid Qildi:</div>
+                <div class="user-value">{{ purchase.user.username }}</div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <h3>Ushbu oyda xaridlar mavjud emas</h3>
+            <p>Tanlangan oyda hech qanday xarid amalga oshirilmagan</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <hr class="summary-divider">
+
+    {% if purchases %}
+    <div class="summary-section">
+        <div class="summary-stats-grid">
+            <div class="summary-stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ total_purchase_cost }}</div>
+                    <div class="stat-label">Jami xarajat</div>
+                </div>
+            </div>
+            <div class="summary-stat-card">
+                <div class="stat-icon">🛒</div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ purchases|length }}</div>
+                    <div class="stat-label">Xaridlar soni</div>
+                </div>
+            </div>
+            <div class="summary-stat-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ month }}</div>
+                    <div class="stat-label">Hisobot oyi</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.report-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 16px;
+}
+
+.report-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.report-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.report-subtitle {
+    font-size: 16px;
+    color: #64748b;
+    font-weight: 400;
+}
+
+.filter-section {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 32px;
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    align-items: end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-label {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 14px;
+}
+
+.filter-input {
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #ffffff;
+    color: #1e293b;
+    font-family: inherit;
+}
+
+.filter-input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.filter-btn {
+    padding: 12px 24px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    background: #1d4ed8;
+}
+
+.purchases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.purchase-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 24px;
+    transition: all 0.3s ease;
+}
+
+.purchase-card:hover {
+    border-color: #2563eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.purchase-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.purchase-date, .purchase-store {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.date-icon, .store-icon {
+    font-size: 16px;
+}
+
+.purchase-details {
+    margin-bottom: 20px;
+}
+
+.detail-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.detail-row:last-child {
+    margin-bottom: 0;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.detail-label {
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.detail-value {
+    font-size: 14px;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.purchase-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.total-label {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.total-amount {
+    font-size: 20px;
+    font-weight: 800;
+    color: #2563eb;
+}
+
+.purchase-user {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 12px;
+}
+
+.user-label {
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.user-value {
+    font-size: 14px;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 64px 32px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+}
+
+.empty-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+.empty-state h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    font-size: 14px;
+    color: #64748b;
+}
+
+.summary-section {
+    margin-top: 32px;
+}
+
+.summary-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.summary-stat-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s ease;
+}
+
+.summary-stat-card:hover {
+    border-color: #2563eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.stat-icon {
+    font-size: 32px;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8fafc;
+    border-radius: 12px;
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 800;
+    color: #2563eb;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.summary-card {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    border-radius: 16px;
+    padding: 32px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    color: white;
+}
+
+.summary-icon {
+    font-size: 48px;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+}
+
+.summary-content {
+    flex: 1;
+}
+
+.summary-amount {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.summary-label {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    opacity: 0.9;
+}
+
+.summary-stats {
+    display: flex;
+    gap: 16px;
+}
+
+.stat-item {
+    font-size: 14px;
+    opacity: 0.8;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 12px;
+    border-radius: 20px;
+}
+
+@media (max-width: 768px) {
+    .report-container {
+        padding: 20px 16px;
+    }
+    
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .purchases-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .detail-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .purchase-header {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+    
+    .summary-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .purchase-user {
+        flex-direction: column;
+        gap: 4px;
+        align-items: flex-start;
+    }
+}
+</style>
+{% endblock %}

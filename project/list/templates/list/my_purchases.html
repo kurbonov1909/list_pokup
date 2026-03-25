@@ -1,0 +1,326 @@
+{% extends 'list/base.html' %}
+
+{% block content %}
+<div class="report-container">
+    <div class="report-header">
+        <h1 class="report-title">📋 Mening Xaridlarim</h1>
+        <p class="report-subtitle">Siz qo'shgan barcha xaridlar ro'yhati</p>
+    </div>
+
+    {% if purchases %}
+        <div class="summary-section">
+            <div class="summary-stats-grid">
+                <div class="summary-stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-content">
+                        <div class="stat-value">{{ total_purchase_cost }}</div>
+                        <div class="stat-label">Jami xarajat</div>
+                    </div>
+                </div>
+                <div class="summary-stat-card">
+                    <div class="stat-icon">🛒</div>
+                    <div class="stat-content">
+                        <div class="stat-value">{{ purchases|length }}</div>
+                        <div class="stat-label">Xaridlar soni</div>
+                    </div>
+                </div>
+                <div class="summary-stat-card">
+                    <div class="stat-icon">👤</div>
+                    <div class="stat-content">
+                        <div class="stat-value">{{ request.user.username }}</div>
+                        <div class="stat-label">Foydalanuvchi</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="purchases-grid">
+            {% for purchase in purchases %}
+            <div class="purchase-card">
+                <div class="purchase-header">
+                    <div class="purchase-date">
+                        <span class="date-icon">📅</span>
+                        <span>{{ purchase.date|date:"d.m.Y" }}</span>
+                    </div>
+                    <div class="purchase-store">
+                        <span class="store-icon">🏪</span>
+                        <span>{{ purchase.store.name }}</span>
+                    </div>
+                </div>
+                
+                <div class="purchase-details">
+                    <div class="detail-row">
+                        <div class="detail-item">
+                            <span class="detail-label">📏 Uzunlik</span>
+                            <span class="detail-value">{{ purchase.length }} m</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">📐 En</span>
+                            <span class="detail-value">{{ purchase.width }} m</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">📊 Qalinlik</span>
+                            <span class="detail-value">{{ purchase.thickness }} m</span>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <div class="detail-item">
+                            <span class="detail-label">⚖️ Zichlik</span>
+                            <span class="detail-value">{{ purchase.density }} kg/m³</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">💰 Kg narx</span>
+                            <span class="detail-value">{{ purchase.price_per_kg }} so'm</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">🔢 Soni</span>
+                            <span class="detail-value">{{ purchase.quantity }} ta</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="purchase-total">
+                    <div class="total-label">💵 Jami narx</div>
+                    <div class="total-amount">{{ purchase.total_cost }} so'm</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <h3>Siz hali xarid qo'shmadingiz</h3>
+            <p>Birinchi xaridni qo'shish uchun "Xarid qo'shish" tugmasini bosing</p>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.report-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 16px;
+}
+
+.report-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.report-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.report-subtitle {
+    font-size: 16px;
+    color: #64748b;
+    font-weight: 400;
+}
+
+.summary-section {
+    margin-top: 32px;
+}
+
+.summary-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.summary-stat-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s ease;
+}
+
+.summary-stat-card:hover {
+    border-color: #2563eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.stat-icon {
+    font-size: 32px;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8fafc;
+    border-radius: 12px;
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 800;
+    color: #2563eb;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.purchases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+}
+
+.purchase-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 24px;
+    transition: all 0.3s ease;
+}
+
+.purchase-card:hover {
+    border-color: #2563eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.purchase-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.purchase-date, .purchase-store {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.date-icon, .store-icon {
+    font-size: 16px;
+}
+
+.purchase-details {
+    margin-bottom: 20px;
+}
+
+.detail-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.detail-row:last-child {
+    margin-bottom: 0;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.detail-label {
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.detail-value {
+    font-size: 14px;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.purchase-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.total-label {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.total-amount {
+    font-size: 20px;
+    font-weight: 800;
+    color: #2563eb;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 64px 32px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    margin-top: 32px;
+}
+
+.empty-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+.empty-state h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    font-size: 14px;
+    color: #64748b;
+}
+
+@media (max-width: 768px) {
+    .report-container {
+        padding: 20px 16px;
+    }
+    
+    .summary-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .purchases-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .detail-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .purchase-header {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+}
+</style>
+{% endblock %}

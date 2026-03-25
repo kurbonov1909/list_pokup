@@ -1,0 +1,72 @@
+{% extends 'list/base.html' %}
+
+{% block content %}
+<div class="content-card">
+    <div class="card-header">
+        <h1 class="card-title">Hisobot Tizimi</h1>
+        <p class="card-subtitle"></p>
+    </div>
+
+    {% if request.user.is_authenticated %}
+        {% if request.user.is_superuser %}
+            <div class="menu-grid">
+                <a href="{% url 'add_store' %}" class="menu-card">
+                    <div class="menu-icon">🏪</div>
+                    <div class="menu-content">
+                        <h3>Magazin qo'shish</h3>
+                        <p>Yangi savdo nuqtasi qo'shish</p>
+                    </div>
+                </a>
+                <a href="{% url 'add_purchase' %}" class="menu-card">
+                    <div class="menu-icon">🛒</div>
+                    <div class="menu-content">
+                        <h3>Xarid qo'shish</h3>
+                        <p>Yangi list xaridini kiritish</p>
+                    </div>
+                </a>
+                <a href="{% url 'add_user' %}" class="menu-card">
+                    <div class="menu-icon">👥</div>
+                    <div class="menu-content">
+                        <h3>Foydalanuvchi qo'shish</h3>
+                        <p>Yangi ishchi yoki admin qo'shish</p>
+                    </div>
+                </a>
+                <a href="{% url 'monthly_report' %}" class="menu-card">
+                    <div class="menu-icon">📊</div>
+                    <div class="menu-content">
+                        <h3>Oylik hisobot</h3>
+                        <p>Xaridlar va xarajatlar hisoboti</p>
+                    </div>
+                </a>
+            </div>
+        {% else %}
+            <div class="menu-grid">
+                <a href="{% url 'add_purchase' %}" class="menu-card">
+                    <div class="menu-icon">🛒</div>
+                    <div class="menu-content">
+                        <h3>Xarid qo'shish</h3>
+                        <p>Yangi list xaridini kiritish</p>
+                    </div>
+                </a>
+                <a href="{% url 'my_purchases' %}" class="menu-card">
+                    <div class="menu-icon">📋</div>
+                    <div class="menu-content">
+                        <h3>Mening xaridlarim</h3>
+                        <p>O'zim qo'shgan xaridlarni ko'rish</p>
+                    </div>
+                </a>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="menu-grid">
+            <a href="{% url 'login' %}" class="menu-card">
+                <div class="menu-icon">🔐</div>
+                <div class="menu-content">
+                    <h3>Tizimga kirish</h3>
+                    <p>Hisobingizga kirish uchun</p>
+                </div>
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

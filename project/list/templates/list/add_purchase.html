@@ -1,0 +1,119 @@
+{% extends 'list/base.html' %}
+
+{% block content %}
+<div class="content-card">
+    <div class="card-header">
+        <h1 class="card-title">🛒 Xarid qo'shish</h1>
+        <p class="card-subtitle">Yangi list xaridini kiritish</p>
+    </div>
+
+    <form method="post" id="purchaseForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="{{ form.date.id_for_label }}" class="form-label">📅 {{ form.date.label }}</label>
+            {{ form.date }}
+            {% if form.date.errors %}
+                <div class="error-message">{{ form.date.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.store.id_for_label }}" class="form-label">🏪 {{ form.store.label }}</label>
+            {{ form.store }}
+            {% if form.store.errors %}
+                <div class="error-message">{{ form.store.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.length.id_for_label }}" class="form-label">📏 {{ form.length.label }}</label>
+            {{ form.length }}
+            {% if form.length.errors %}
+                <div class="error-message">{{ form.length.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.width.id_for_label }}" class="form-label">📐 {{ form.width.label }}</label>
+            {{ form.width }}
+            {% if form.width.errors %}
+                <div class="error-message">{{ form.width.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.thickness.id_for_label }}" class="form-label">📊 {{ form.thickness.label }}</label>
+            {{ form.thickness }}
+            {% if form.thickness.errors %}
+                <div class="error-message">{{ form.thickness.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.density.id_for_label }}" class="form-label">⚖️ {{ form.density.label }}</label>
+            {{ form.density }}
+            {% if form.density.errors %}
+                <div class="error-message">{{ form.density.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.price_per_kg.id_for_label }}" class="form-label">💰 {{ form.price_per_kg.label }}</label>
+            {{ form.price_per_kg }}
+            {% if form.price_per_kg.errors %}
+                <div class="error-message">{{ form.price_per_kg.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.quantity.id_for_label }}" class="form-label">🔢 {{ form.quantity.label }}</label>
+            {{ form.quantity }}
+            {% if form.quantity.errors %}
+                <div class="error-message">{{ form.quantity.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group" style="grid-column: 1 / -1;">
+            <button type="button" id="calculateBtn" class="btn btn-secondary">🧮 Hisoblash</button>
+        </div>
+
+        <div id="result" class="message message-success" style="display: none; grid-column: 1 / -1;">
+            💰 Umumiy narx: <strong><span id="totalPrice"></span> so'm</strong>
+        </div>
+
+        <div class="form-group" style="grid-column: 1 / -1;">
+            <button type="submit" id="saveBtn" class="btn btn-primary" style="display: none;">💾 Saqlash</button>
+        </div>
+    </form>
+</div>
+
+<script>
+function formatNumber(num) {
+    return new Intl.NumberFormat('uz-UZ').format(num);
+}
+
+const calcBtn = document.getElementById('calculateBtn');
+if (calcBtn) {
+    calcBtn.addEventListener('click', function() {
+        const length = parseFloat(document.getElementById('id_length').value);
+        const width = parseFloat(document.getElementById('id_width').value);
+        const thickness = parseFloat(document.getElementById('id_thickness').value);
+        const density = parseFloat(document.getElementById('id_density').value);
+        const pricePerKg = parseFloat(document.getElementById('id_price_per_kg').value);
+        const quantity = parseInt(document.getElementById('id_quantity').value, 10);
+
+        if (length > 0 && width > 0 && thickness > 0 && density > 0 && pricePerKg > 0 && quantity > 0) {
+            const mass = length * width * thickness * density;
+            const sheetPrice = mass * pricePerKg;
+            const totalPrice = sheetPrice * quantity;
+            document.getElementById('totalPrice').textContent = formatNumber(totalPrice.toFixed(2));
+            document.getElementById('result').style.display = 'flex';
+            document.getElementById('saveBtn').style.display = 'inline-flex';
+        } else {
+            alert('Barcha maydonlarni to\'ldiring va 0 dan katta qiymat bering.');
+        }
+    });
+}
+</script>
+{% endblock %}

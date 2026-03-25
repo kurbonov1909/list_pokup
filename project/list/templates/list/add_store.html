@@ -1,0 +1,24 @@
+{% extends 'list/base.html' %}
+
+{% block content %}
+<div class="content-card">
+    <div class="card-header">
+        <h1 class="card-title">🏪 Magazin qo'shish</h1>
+        <p class="card-subtitle">Yangi savdo nuqtasi qo'shish</p>
+    </div>
+
+    <form method="post" style="max-width: 500px;">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="{{ form.name.id_for_label }}" class="form-label">🏪 {{ form.name.label }}</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <div class="error-message">{{ form.name.errors }}</div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">💾 Saqlash</button>
+    </form>
+</div>
+{% endblock %}
