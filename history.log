@@ -78,3 +78,4 @@ Traceback (most recent call last):
   File "C:\Users\Abdullo\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
     return super().execute(query, params)
 django.db.utils.OperationalError: no such table: auth_user
+[INFO] 2026-03-29 15:27:05,044 C:\Users\Abdullo\OneDrive\Desktop\list_pokup (2)\list_pokup\list_pokup\project\project\settings.py changed, reloading.
