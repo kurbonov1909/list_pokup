@@ -140,7 +140,7 @@ def main():
     print("Starting Django to Netlify deployment setup...")
     
     # Change to project directory
-    os.chdir('c:/Users/kurbonov.a/Desktop/list_pokup/list_pokup')
+    os.chdir('c:/Users/Abdullo/OneDrive/Desktop/list_pokup (2)/list_pokup/list_pokup')
     
     # Install requirements
     install_requirements()

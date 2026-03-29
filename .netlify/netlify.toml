@@ -1,0 +1,49 @@
+headersOrigin = "config"
+redirectsOrigin = "config"
+plugins = []
+
+[functions]
+
+[functions."*"]
+
+[build]
+publish = "C:\\Users\\Abdullo\\OneDrive\\Desktop\\list_pokup (2)\\list_pokup\\list_pokup\\staticfiles"
+publishOrigin = "config"
+commandOrigin = "config"
+command = "python manage.py collectstatic --noinput"
+base = "C:\\Users\\Abdullo\\OneDrive\\Desktop\\list_pokup (2)\\list_pokup\\list_pokup\\project"
+
+[build.environment]
+PYTHON_VERSION = "3.9"
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]
+
+[[headers]]
+for = "/*"
+
+[headers.values]
+X-Frame-Options = "DENY"
+X-XSS-Protection = "1; mode=block"
+X-Content-Type-Options = "nosniff"
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 404.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]

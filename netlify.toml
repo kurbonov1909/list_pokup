@@ -1,5 +1,5 @@
 [build]
-  base = "project/project"
+  base = "project"
   command = "python manage.py collectstatic --noinput"
   publish = "staticfiles"
 
@@ -7,9 +7,14 @@
   PYTHON_VERSION = "3.9"
 
 [[redirects]]
+  from = "/admin/*"
+  to = "/admin/index.html"
+  status = 200
+  
+[[redirects]]
   from = "/*"
   to = "/index.html"
-  status = 404
+  status = 200
 
 [[headers]]
   for = "/*"
