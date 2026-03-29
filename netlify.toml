@@ -1,6 +1,5 @@
 [build]
-  base = "project"
-  command = "python manage.py collectstatic --noinput"
+  command = "python project/manage.py collectstatic --noinput"
   publish = "staticfiles"
 
 [build.environment]
